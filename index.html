@@ -1,73 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invernadero</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extras.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invernadero</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extras.min.js"></script>
 </head>
 <body>
-    <a-scene vr-mode-ui="enabled: true">
-        <!-- Carga de modelos -->
-        <a-assets>
-            <a-asset-item id="invernadero-glb" src="invernadero.glb"></a-asset-item>
-        </a-assets>
+  <a-scene vr-mode-ui="enabled: true">
+    
+    <!-- Carga de modelos -->
+    <a-assets>
+      <a-asset-item id="invernadero-glb" src="invernadero.glb"></a-asset-item>
+    </a-assets>
 
-        <!-- Modelo 3D del museo con todos los elementos en su interior -->
-        <a-entity 
-            gltf-model="#invernadero-glb" 
-            scale="10 10 10" 
-            position="0 0 0" 
-            static-body>
-            
-            <!-- Cámara con controles móviles -->
-            <a-entity id="rig" position="0 1.6 0">
-                <a-entity 
-                    camera 
-                    look-controls 
-                    wasd-controls="acceleration: 200">
-                </a-entity>
-            </a-entity>
-            
-            <!-- Permitir movimiento con orientación del dispositivo -->
-            <a-entity mobile-movement></a-entity>
+    <!-- Modelo 3D -->
+    <a-entity 
+      gltf-model="#invernadero-glb" 
+      scale="10 10 10" 
+      position="0 0 0">
+    </a-entity>
 
-            <!-- Script para movimiento con orientación del dispositivo -->
-            <script>
-                AFRAME.registerComponent('mobile-movement', {
-                    init: function () {
-                        const el = this.el;
-                        window.addEventListener('deviceorientation', function (event) {
-                            const beta = event.beta; // Inclinación frontal-trasera
-                            const gamma = event.gamma; // Inclinación lateral
+    <!-- Rig con cámara -->
+    <a-entity id="rig" position="0 1.6 5" mobile-movement>
+      <a-entity 
+        camera 
+        look-controls 
+        wasd-controls="acceleration: 200">
+      </a-entity>
+    </a-entity>
 
-                            // Movimiento adelante/atrás
-                            if (beta > 15) {
-                                el.object3D.position.z -= 1;
-                            }
-                            if (beta < -15) {
-                                el.object3D.position.z += 1;
-                            }
+    <!-- Iluminación -->
+    <a-light type="ambient" color="#FFFFFF" intensity="1"></a-light>
+    <a-light type="point" position="10 10 10" intensity="2" color="#FFFFFF"></a-light>
+    <a-light type="point" position="-10 10 10" intensity="2" color="#FFFFFF"></a-light>
+    <a-light type="point" position="0 5 0" intensity="1.5" color="#FFFFFF"></a-light>
 
-                            // Movimiento izquierda/derecha
-                            if (gamma > 10) {
-                                el.object3D.position.x += 1;
-                            }
-                            if (gamma < -10) {
-                                el.object3D.position.x -= 1;
-                            }
-                        });
-                    }
-                });
-            </script>
-        </a-entity>
+    <!-- Script de movimiento por orientación -->
+    <script>
+      AFRAME.registerComponent('mobile-movement', {
+        init: function () {
+          const el = this.el;
+          window.addEventListener('deviceorientation', function (event) {
+            const beta = event.beta;   // Inclinación adelante/atrás
+            const gamma = event.gamma; // Inclinación izquierda/derecha
 
-        <!-- Iluminación mejorada -->
-        <a-light type="ambient" color="#FFFFFF" intensity="1"></a-light>
-        <a-light type="point" position="10 10 10" intensity="2" color="#FFFFFF"></a-light>
-        <a-light type="point" position="-10 10 10" intensity="2" color="#FFFFFF"></a-light>
-        <a-light type="point" position="0 5 0" intensity="1.5" color="#FFFFFF"></a-light>
-    </a-scene>
+            // Movimiento adelante/atrás
+            if (beta > 15) {
+              el.object3D.position.z -= 0.1;
+            }
+            if (beta < -15) {
+              el.object3D.position.z += 0.1;
+            }
+
+            // Movimiento izquierda/derecha
+            if (gamma > 10) {
+              el.object3D.position.x += 0.1;
+            }
+            if (gamma < -10) {
+              el.object3D.position.x -= 0.1;
+            }
+          });
+        }
+      });
+    </script>
+  </a-scene>
 </body>
 </html>
